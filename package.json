@@ -1,0 +1,21 @@
+{
+  "name": "cas-parser",
+  "version": "1.0.0",
+  "description": "CAS (Consolidated Account Statement) parser for CDSL, NSDL, CAMS, and KFintech documents",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node test/test-parser.js"
+  },
+  "keywords": ["cas", "cdsl", "nsdl", "cams", "kfintech", "pdf", "parser"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pdf-parse": "^1.1.1",
+    "pdf-lib": "^1.17.1",
+    "pdf2json": "^3.0.5",
+    "pdfreader": "^3.0.0",
+    "pdfjs-dist": "^4.0.379"
+  },
+  "devDependencies": {}
+}
