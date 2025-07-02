@@ -60,8 +60,46 @@
                     </div>
                 </div>
                 
-                <!-- Success Result -->
-                <div class="result-content" id="successResult" style="display: none;">
+                <!-- View Toggle -->
+                <div class="view-toggle" id="viewToggle" style="display: none;">
+                    <button class="view-btn active" id="tableViewBtn" data-view="table">
+                        📊 Table View
+                    </button>
+                    <button class="view-btn" id="jsonViewBtn" data-view="json">
+                        📋 JSON View
+                    </button>
+                </div>
+
+                <!-- Table Visualization -->
+                <div class="visualization-content" id="visualizationContent" style="display: none;">
+                    <!-- Portfolio Summary Dashboard -->
+                    <div class="portfolio-dashboard">
+                        <h3>💼 Portfolio Summary</h3>
+                        <div class="summary-cards" id="summaryCards"></div>
+                        <div class="allocation-overview" id="allocationOverview"></div>
+                    </div>
+
+                    <!-- Investor Information -->
+                    <div class="investor-section">
+                        <h3>👤 Investor Information</h3>
+                        <div class="investor-card" id="investorCard"></div>
+                    </div>
+
+                    <!-- Demat Holdings -->
+                    <div class="demat-section">
+                        <h3>🏦 Demat Account Holdings</h3>
+                        <div class="demat-tables" id="dematTables"></div>
+                    </div>
+
+                    <!-- Mutual Fund Holdings -->
+                    <div class="mutual-fund-section" id="mutualFundSection">
+                        <h3>📈 Mutual Fund Portfolio</h3>
+                        <div class="mutual-fund-tables" id="mutualFundTables"></div>
+                    </div>
+                </div>
+
+                <!-- JSON View (Original) -->
+                <div class="json-content" id="jsonContent" style="display: none;">
                     <div class="result-info">
                         <div class="info-item">
                             <strong>File:</strong> <span id="resultFileName"></span>

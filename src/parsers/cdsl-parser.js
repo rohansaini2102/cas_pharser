@@ -21,12 +21,12 @@ class CDSLParser extends BaseParser {
     };
 
     try {
-      // Extract name - appears multiple times in the document
-      const nameMatch = this.pdfText.match(/Name\/Joint Name.*?\n.*?([A-Za-z\s]+yeleswaram)/i) ||
-                       this.pdfText.match(/Surendra satyanarayan yeleswaram/i) ||
-                       this.pdfText.match(/([A-Z][a-z]+\s+[a-z]+\s+[a-z]+)/);
+      // Extract name - appears directly in the text as "Surendra satyanarayan yeleswaram"
+      const nameMatch = this.pdfText.match(/([A-Z][a-z]+\s+[a-z]+\s+[a-z]+)\s+S\s+O\s+/i) ||
+                       this.pdfText.match(/([A-Z][a-z]+\s+[a-z]+\s+[a-z]+)\s+PAN\s*:/i) ||
+                       this.pdfText.match(/([A-Z][a-z]+\s+[a-z]+\s+[a-z]+)(?:\s+S\s+O|\s+D\s+O|\s+W\s+O)/i);
       if (nameMatch) {
-        investor.name = this.cleanText(nameMatch[1] || nameMatch[0]);
+        investor.name = this.cleanText(nameMatch[1]);
       }
 
       // Extract PAN - appears as "PAN: APEPY1667C"
@@ -36,12 +36,12 @@ class CDSLParser extends BaseParser {
         investor.pan = panMatch[1];
       }
 
-      // Extract address - appears after name in structured format
-      const addressMatch = this.pdfText.match(/S O SATYANARAYAN YELESWARAM ([^]*?)(?:PINCODE|Statement|YOUR)/i);
+      // Extract address - appears after "S O SATYANARAYAN YELESWARAM"
+      const addressMatch = this.pdfText.match(/S\s+O\s+SATYANARAYAN\s+YELESWARAM\s+([A-Z][^]*?)(?:PINCODE|Statement|YOUR)/i);
       if (addressMatch) {
         let address = this.cleanText(addressMatch[1]);
-        // Clean up address
-        address = address.replace(/MUMBAI\s+MAHARASHTRA/g, 'MUMBAI MAHARASHTRA');
+        // Clean up address formatting
+        address = address.replace(/\s+/g, ' ').trim();
         
         // Extract pincode from address
         const pincodeMatch = address.match(/(\d{6})/);
@@ -78,23 +78,22 @@ class CDSLParser extends BaseParser {
   }
 
   /**
-   * Extract demat account information
+   * Extract demat account information using section-based parsing
    */
   async extractDematAccounts() {
     const accounts = [];
     
     try {
-      // Find all DP Name patterns in the text - this is more reliable
-      const dpNamePattern = /DP Name\s*:\s*([^]+?)(?=DP Name|BO ID|MF Folios|MUTUAL FUND|$)/gi;
-      let dpMatch;
+      // Split text by DP Name sections to get distinct accounts
+      const dpSections = this.splitIntoAccountSections();
       
-      while ((dpMatch = dpNamePattern.exec(this.pdfText)) !== null) {
-        const sectionText = dpMatch[0];
-        const dpName = this.cleanText(dpMatch[1].split('\n')[0]);
+      for (let i = 0; i < dpSections.length; i++) {
+        const section = dpSections[i];
+        const nextSection = dpSections[i + 1];
         
         const account = {
           dp_id: '',
-          dp_name: dpName,
+          dp_name: '',
           bo_id: '',
           client_id: '',
           demat_type: 'cdsl',
@@ -116,55 +115,20 @@ class CDSLParser extends BaseParser {
           value: 0
         };
 
-        // Extract DP ID
-        const dpIdMatch = sectionText.match(/DP\s+ID\s*:?\s*(\d+)/i);
-        if (dpIdMatch) {
-          account.dp_id = dpIdMatch[1];
-        }
-
-        // Extract Client ID
-        const clientIdMatch = sectionText.match(/CLIENT\s+ID\s*:?\s*(\d+)/i);
-        if (clientIdMatch) {
-          account.client_id = clientIdMatch[1];
-        }
-
-        // Extract BO ID from separate sections
-        const boIdPattern = new RegExp(`BO ID\\s*:\\s*(\\d+)`, 'i');
-        const boIdMatch = this.pdfText.match(boIdPattern);
-        if (boIdMatch) {
-          account.bo_id = boIdMatch[1];
-        }
-
-        // Extract account details
-        const emailMatch = sectionText.match(/Email\s+Id\s*:?\s*([^\s]+@[^\s]+)/i);
-        if (emailMatch) {
-          account.additional_info.email = emailMatch[1].toLowerCase();
-        }
-
-        const subStatusMatch = sectionText.match(/BO\s+Sub\s+Status\s*:?\s*([^]+?)(?:BSDA|$)/i);
-        if (subStatusMatch) {
-          account.additional_info.bo_sub_status = this.cleanText(subStatusMatch[1]);
-        }
-
-        const nomineeMatch = sectionText.match(/Nominee\s*:?\s*([^]+?)(?:DP Name|MF|$)/i);
-        if (nomineeMatch) {
-          account.additional_info.nominee = this.cleanText(nomineeMatch[1]);
-        }
-
-        // Extract holdings from the full text for this DP
-        account.holdings = await this.extractHoldingsForDP(account.dp_id);
+        // Extract account details from section header
+        this.extractAccountDetailsFromSection(section, account);
+        
+        // Find BO ID that belongs to this account using a more precise method
+        account.bo_id = this.findBoIdForAccount(section, account, i);
+        
+        // Extract holdings for this specific account section
+        account.holdings = await this.extractHoldingsForAccount(section, nextSection, account);
         
         // Calculate total value
         account.value = this.calculateAccountValue(account.holdings);
 
         accounts.push(account);
       }
-
-      // Also look for summary table data
-      const summaryAccounts = this.extractAccountsFromSummary();
-      
-      // Merge or deduplicate accounts
-      return this.mergeAccountData(accounts, summaryAccounts);
       
     } catch (error) {
       console.error('Error extracting demat accounts:', error);
@@ -173,70 +137,171 @@ class CDSLParser extends BaseParser {
     return accounts;
   }
 
+
+
   /**
-   * Extract account information from summary table
+   * Split PDF text into account sections based on DP Name markers
    */
-  extractAccountsFromSummary() {
-    const accounts = [];
+  splitIntoAccountSections() {
+    const sections = [];
     
     try {
-      // Look for the summary table pattern
-      const summaryPattern = /CDSL Demat Account\s+([^]+?)\s+DP Id:\s*(\d+)\s+Client Id\s*:(\d+)\s+(\d+)\s+([\d,]+\.?\d*)/gi;
+      if (!this.pdfText || this.pdfText.trim().length === 0) {
+        console.warn('No PDF text available for parsing');
+        return sections;
+      }
+      
+      // Only match English "DP Name:" sections (account definitions), not Hindi transaction sections
+      // Look specifically for the account definition pattern
+      const dpPattern = /DP\s+Name\s*:\s*([A-Z][^]*?)(?=DP\s+Name\s*:|MF\s+Folios|Mutual Fund|$)/gi;
       let match;
       
-      while ((match = summaryPattern.exec(this.pdfText)) !== null) {
-        const account = {
-          dp_name: this.cleanText(match[1]),
-          dp_id: match[2],
-          client_id: match[3],
-          bo_id: match[2] + match[3], // Construct BO ID
-          demat_type: 'cdsl',
-          value: this.parseNumber(match[5]),
-          holdings: { equities: [], demat_mutual_funds: [], corporate_bonds: [], government_securities: [], aifs: [] },
-          additional_info: { status: 'Active', bo_type: null, bo_sub_status: '', bsda: 'NO', nominee: '', email: '' }
-        };
+      while ((match = dpPattern.exec(this.pdfText)) !== null) {
+        const sectionText = match[0];
         
-        accounts.push(account);
+        // Strict validation for account definition sections
+        const hasRequiredFields = sectionText.includes('DP ID') && 
+                                 sectionText.includes('CLIENT ID') &&
+                                 sectionText.includes('Email Id') &&
+                                 sectionText.includes('BO Sub Status');
+        
+        // Exclude Hindi transaction sections
+        const isNotTransactionSection = !sectionText.includes('STATEMENT OF TRANSACTIONS') &&
+                                       !sectionText.includes('No Transaction during the period') &&
+                                       !sectionText.includes('HOLDING STATEMENT');
+        
+        // Ensure minimum meaningful content
+        const hasMinimumContent = sectionText.trim().length > 200;
+        
+        if (hasRequiredFields && isNotTransactionSection && hasMinimumContent) {
+          sections.push(sectionText);
+          console.log(`Valid account section found: ${sectionText.substring(0, 50)}...`);
+        } else {
+          console.log(`Skipped invalid section: ${sectionText.substring(0, 50)}...`);
+        }
       }
+      
+      console.log(`Found ${sections.length} valid demat account definition sections`);
     } catch (error) {
-      console.error('Error extracting summary accounts:', error);
+      console.error('Error splitting into account sections:', error);
     }
     
-    return accounts;
+    return sections;
   }
 
   /**
-   * Merge account data from different sources
+   * Extract account details from a section
    */
-  mergeAccountData(detailAccounts, summaryAccounts) {
-    const merged = [];
-    const seen = new Set();
-    
-    // Add detailed accounts first
-    detailAccounts.forEach(account => {
-      const key = `${account.dp_id}-${account.client_id}`;
-      if (!seen.has(key)) {
-        merged.push(account);
-        seen.add(key);
+  extractAccountDetailsFromSection(sectionText, account) {
+    try {
+      if (!sectionText || !account) {
+        console.warn('Invalid parameters for extracting account details');
+        return;
       }
-    });
-    
-    // Add summary accounts that weren't found in details
-    summaryAccounts.forEach(account => {
-      const key = `${account.dp_id}-${account.client_id}`;
-      if (!seen.has(key)) {
-        merged.push(account);
-        seen.add(key);
+      
+      // Extract DP Name
+      const dpNameMatch = sectionText.match(/DP\s+Name\s*:\s*([^\n]+)/i);
+      if (dpNameMatch) {
+        account.dp_name = this.cleanText(dpNameMatch[1]);
+      } else {
+        console.warn('DP Name not found in section');
       }
-    });
-    
-    return merged;
+
+      // Extract DP ID
+      const dpIdMatch = sectionText.match(/DP\s+ID\s*:?\s*(\d+)/i);
+      if (dpIdMatch) {
+        account.dp_id = dpIdMatch[1];
+      } else {
+        console.warn('DP ID not found in section');
+      }
+
+      // Extract Client ID
+      const clientIdMatch = sectionText.match(/CLIENT\s+ID\s*:?\s*(\d+)/i);
+      if (clientIdMatch) {
+        account.client_id = clientIdMatch[1];
+      } else {
+        console.warn('Client ID not found in section');
+      }
+
+      // Extract additional info
+      const emailMatch = sectionText.match(/Email\s+Id\s*:?\s*([^\s]+@[^\s]+)/i);
+      if (emailMatch) {
+        account.additional_info.email = emailMatch[1].toLowerCase();
+      }
+
+      const subStatusMatch = sectionText.match(/BO\s+Sub\s+Status\s*:?\s*([^\n]+)/i);
+      if (subStatusMatch) {
+        account.additional_info.bo_sub_status = this.cleanText(subStatusMatch[1]);
+      }
+
+      const nomineeMatch = sectionText.match(/Nominee\s*:?\s*([^\n]+)/i);
+      if (nomineeMatch) {
+        account.additional_info.nominee = this.cleanText(nomineeMatch[1]);
+      }
+      
+      // Validate required fields
+      if (!account.dp_name || !account.dp_id || !account.client_id) {
+        console.warn('Missing required account fields:', {
+          dp_name: account.dp_name,
+          dp_id: account.dp_id,
+          client_id: account.client_id
+        });
+      }
+    } catch (error) {
+      console.error('Error extracting account details:', error);
+    }
   }
 
   /**
-   * Extract holdings for a specific DP ID
+   * Find BO ID that belongs to this account
    */
-  async extractHoldingsForDP(dpId) {
+  findBoIdForAccount(sectionText, account, accountIndex) {
+    try {
+      if (!sectionText || !account) {
+        console.warn('Invalid parameters for finding BO ID');
+        return '';
+      }
+      
+      // Extract all BO IDs from the entire PDF text in order
+      const allBoIds = [];
+      const boIdPattern = /BO\s+ID\s*:?\s*(\d+)/gi;
+      let match;
+      
+      while ((match = boIdPattern.exec(this.pdfText)) !== null) {
+        const boId = match[1];
+        if (!allBoIds.includes(boId)) {
+          allBoIds.push(boId);
+        }
+      }
+      
+      console.log(`Found unique BO IDs in PDF: ${allBoIds.join(', ')}`);
+      
+      // Map the account index to the corresponding BO ID
+      if (accountIndex < allBoIds.length) {
+        const assignedBoId = allBoIds[accountIndex];
+        console.log(`Assigned BO ID ${assignedBoId} to account ${accountIndex}: ${account.dp_name}`);
+        return assignedBoId;
+      }
+      
+      // Fallback: construct BO ID from DP ID + Client ID
+      if (account.dp_id && account.client_id) {
+        const constructedBoId = account.dp_id + account.client_id;
+        console.log(`Constructed BO ID ${constructedBoId} for account ${account.dp_name}`);
+        return constructedBoId;
+      }
+      
+      console.warn('Could not find or construct BO ID for account:', account.dp_name);
+    } catch (error) {
+      console.error('Error finding BO ID for account:', error);
+    }
+    
+    return '';
+  }
+
+  /**
+   * Extract holdings for a specific account from its section
+   */
+  async extractHoldingsForAccount(sectionText, nextSectionText, account) {
     const holdings = {
       equities: [],
       demat_mutual_funds: [],
@@ -246,27 +311,63 @@ class CDSLParser extends BaseParser {
     };
 
     try {
-      // Find holdings section for this DP
-      const holdingPattern = new RegExp(`BO ID\\s*:\\s*\\d+[^]*?Portfolio Value[^]*?(?=BO ID|$)`, 'gi');
-      const holdingSections = this.pdfText.match(holdingPattern);
-      
-      if (holdingSections) {
-        for (const section of holdingSections) {
-          // Check if this section contains our DP ID or relates to it
-          if (section.includes(dpId) || this.sectionRelatedToDP(section, dpId)) {
-            const parsedHoldings = this.parseHoldingsFromSection(section);
-            
-            // Merge holdings
-            holdings.equities.push(...parsedHoldings.equities);
-            holdings.demat_mutual_funds.push(...parsedHoldings.demat_mutual_funds);
-            holdings.corporate_bonds.push(...parsedHoldings.corporate_bonds);
-            holdings.government_securities.push(...parsedHoldings.government_securities);
-          }
-        }
+      // Find the specific transaction section for this account using BO ID
+      const boId = account.bo_id;
+      if (!boId) {
+        console.log(`No BO ID available for account ${account.dp_name}`);
+        return holdings;
       }
-
+      
+      // Look for the transaction section that contains this specific BO ID
+      // Find the position of this BO ID and extract everything until the next BO ID
+      const boIdPattern1 = `BO ID: ${boId}`;
+      const boIdPattern2 = `BO ID : ${boId}`;
+      
+      let startIndex = this.pdfText.indexOf(boIdPattern1);
+      if (startIndex === -1) {
+        startIndex = this.pdfText.indexOf(boIdPattern2);
+      }
+      
+      if (startIndex !== -1) {
+        // Find the next BO ID occurrence
+        const nextBoIdIndex = this.pdfText.indexOf('BO ID', startIndex + 10);
+        const transactionSection = nextBoIdIndex !== -1 ? 
+          this.pdfText.substring(startIndex, nextBoIdIndex) :
+          this.pdfText.substring(startIndex);
+        
+        console.log(`Transaction section for ${account.dp_name} (BO ID ${boId}): ${transactionSection.length} chars`);
+        
+        
+        // Check if this section indicates no holdings
+        // Only check for explicit "Nil Holding" - "No Transaction" doesn't mean no holdings
+        if (transactionSection.includes('Nil Holding')) {
+          console.log(`Account ${account.dp_name} has no holdings (Nil Holding)`);
+          return holdings; // Return empty holdings
+        }
+        
+        // Check if this section has actual holdings data
+        if (transactionSection.includes('HOLDING STATEMENT') && 
+            transactionSection.includes('Portfolio Value')) {
+          console.log(`Found holdings section for ${account.dp_name} with BO ID ${boId}`);
+          
+          // Parse holdings from this specific transaction section
+          const parsedHoldings = this.parseHoldingsFromSection(transactionSection);
+          
+          holdings.equities = parsedHoldings.equities;
+          holdings.demat_mutual_funds = parsedHoldings.demat_mutual_funds;
+          holdings.corporate_bonds = parsedHoldings.corporate_bonds;
+          holdings.government_securities = parsedHoldings.government_securities;
+          
+          console.log(`Found ${holdings.equities.length} equities and ${holdings.demat_mutual_funds.length} funds for ${account.dp_name}`);
+        } else {
+          console.log(`Account ${account.dp_name} transaction section found but no holdings data`);
+        }
+      } else {
+        console.log(`No transaction section found for ${account.dp_name} with BO ID ${boId}`);
+      }
+      
     } catch (error) {
-      console.error('Error extracting holdings for DP:', dpId, error);
+      console.error('Error extracting holdings for account:', account.dp_name, error);
     }
 
     return holdings;
@@ -325,14 +426,6 @@ class CDSLParser extends BaseParser {
     return holdings;
   }
 
-  /**
-   * Check if section is related to a specific DP
-   */
-  sectionRelatedToDP(section, dpId) {
-    // This is a heuristic to match sections to DPs
-    return section.includes(`DP Name`) && 
-           (section.includes('INDMONEY') || section.includes('GROWW') || section.includes('MOTILAL'));
-  }
 
   /**
    * Extract holdings from account section (legacy method)
@@ -658,6 +751,34 @@ class CDSLParser extends BaseParser {
     }
 
     return period;
+  }
+
+  /**
+   * Extract DP name pattern for searching in transaction sections
+   */
+  extractDpNameForSearch(dpName) {
+    try {
+      // Extract the main company name from the full DP name string
+      if (dpName.includes('INDMONEY')) {
+        return 'INDMONEY';
+      } else if (dpName.includes('GROWW')) {
+        return 'GROWW';
+      } else if (dpName.includes('MOTILAL')) {
+        return 'MOTILAL';
+      }
+      
+      // Fallback: extract first meaningful word
+      const words = dpName.split(' ');
+      for (const word of words) {
+        if (word.length > 3 && !['DP', 'ID', 'CLIENT', 'LIMITED', 'PRIVATE'].includes(word)) {
+          return word;
+        }
+      }
+    } catch (error) {
+      console.error('Error extracting DP name pattern:', error);
+    }
+    
+    return null;
   }
 
   /**
