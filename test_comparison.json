@@ -1,0 +1,483 @@
+{
+  "investor": {
+    "name": "Surendra satyanarayan yeleswaram",
+    "pan": "APEPY1667C",
+    "address": "B WING ROOM NO 606, CHITRAKU T BUILDING BHATWADI NEAR SAMJA KALYAN KENDRA, GHATKOPAR WEST MUMBAI MAHARASHTRA 400084 MUMBAI MAHARASHTRA",
+    "email": "surendraapril98@gmail.com",
+    "mobile": "",
+    "cas_id": "AA07602549",
+    "pincode": "400084"
+  },
+  "demat_accounts": [
+    {
+      "dp_id": "12095500",
+      "dp_name": "INDMONEY PRIVATE LIMITED DP ID : 12095500 CLIENT ID : 18781451 Email Id : surendraapril98@gmail.com Mobile No : XXXXXX0610 BO Sub Status : Individual- Resident Negative Nomination BSDA : NO RGESS : NO Account Status : Active BO Status : INDIVIDUAL Frozen Status : Not Frozen Nominee : Not Registered",
+      "bo_id": "1209550018781451",
+      "client_id": "18781451",
+      "demat_type": "cdsl",
+      "holdings": {
+        "equities": [
+          {
+            "isin": "INE805Q01028",
+            "name": "ADCON CAPITAL SERVICES LTD#NEW EQUITY SHARES WITH FACE VALUE Re. 1/- AFTER SUBDIVISION",
+            "units": 150,
+            "value": 111,
+            "additional_info": {
+              "market_price": 0.74,
+              "free_balance": 150
+            }
+          },
+          {
+            "isin": "INE092T01019",
+            "name": "IDFC FIRST BANK LIMITED # EQUITY SHARES",
+            "units": 10,
+            "value": 680.3,
+            "additional_info": {
+              "market_price": 68.03,
+              "free_balance": 10
+            }
+          },
+          {
+            "isin": "INE053F01010",
+            "name": "INDIAN RAILWAY FINANCE CORPORATION LIMITED # EQUITY SHARES",
+            "units": 10,
+            "value": 1389,
+            "additional_info": {
+              "market_price": 138.9,
+              "free_balance": 10
+            }
+          },
+          {
+            "isin": "INE733E01010",
+            "name": "NTPC LIMITED-EQUITY SHARES",
+            "units": 5,
+            "value": 1671.25,
+            "additional_info": {
+              "market_price": 334.25,
+              "free_balance": 5
+            }
+          },
+          {
+            "isin": "INE758T01015",
+            "name": "ETERNAL LIMITED # EQUITY SHARES",
+            "units": 8,
+            "value": 1910,
+            "additional_info": {
+              "market_price": 238.75,
+              "free_balance": 8
+            }
+          },
+          {
+            "isin": "INE040H01021",
+            "name": "SUZLON ENERGY LIMITED - NEW EQUITY SHARES OF RS. 2/- AFTER SPLIT",
+            "units": 20,
+            "value": 1429.2,
+            "additional_info": {
+              "market_price": 71.46,
+              "free_balance": 20
+            }
+          }
+        ],
+        "demat_mutual_funds": [
+          {
+            "isin": "INF666M01IW1",
+            "name": "GROWW AM LTD#GROWW MF- GROWW GOLD ETF",
+            "units": 7,
+            "value": 658.49,
+            "additional_info": {
+              "market_price": 94.07,
+              "free_balance": 7
+            }
+          },
+          {
+            "isin": "INF666M01IH2",
+            "name": "GROWW AM LTD#GROWW MF- GROWW NIFTY EV & NEW AGE AUTOMOTIVE ETF",
+            "units": 5,
+            "value": 145.15,
+            "additional_info": {
+              "market_price": 29.03,
+              "free_balance": 5
+            }
+          }
+        ],
+        "corporate_bonds": [],
+        "government_securities": [],
+        "aifs": []
+      },
+      "additional_info": {
+        "status": "Active",
+        "bo_type": null,
+        "bo_sub_status": "Individual- Resident Negative Nomination",
+        "bsda": "NO",
+        "nominee": "Not Registered",
+        "email": "surendraapril98@gmail.com"
+      },
+      "value": 7994.39
+    },
+    {
+      "dp_id": "12088702",
+      "dp_name": "GROWW INVEST TECH PRIVATE LIMITED DP ID : 12088702 CLIENT ID : 76193268 Email Id : surendraapril98@gmail.com Mobile No : XXXXXX0610 BO Sub Status : Individual- Resident Negative Nomination BSDA : NO RGESS : NO Account Status : Active BO Status : INDIVIDUAL Frozen Status : Not Frozen Nominee : Not Registered",
+      "bo_id": "1209550018781451",
+      "client_id": "76193268",
+      "demat_type": "cdsl",
+      "holdings": {
+        "equities": [
+          {
+            "isin": "INE805Q01028",
+            "name": "ADCON CAPITAL SERVICES LTD#NEW EQUITY SHARES WITH FACE VALUE Re. 1/- AFTER SUBDIVISION",
+            "units": 150,
+            "value": 111,
+            "additional_info": {
+              "market_price": 0.74,
+              "free_balance": 150
+            }
+          },
+          {
+            "isin": "INE092T01019",
+            "name": "IDFC FIRST BANK LIMITED # EQUITY SHARES",
+            "units": 10,
+            "value": 680.3,
+            "additional_info": {
+              "market_price": 68.03,
+              "free_balance": 10
+            }
+          },
+          {
+            "isin": "INE053F01010",
+            "name": "INDIAN RAILWAY FINANCE CORPORATION LIMITED # EQUITY SHARES",
+            "units": 10,
+            "value": 1389,
+            "additional_info": {
+              "market_price": 138.9,
+              "free_balance": 10
+            }
+          },
+          {
+            "isin": "INE733E01010",
+            "name": "NTPC LIMITED-EQUITY SHARES",
+            "units": 5,
+            "value": 1671.25,
+            "additional_info": {
+              "market_price": 334.25,
+              "free_balance": 5
+            }
+          },
+          {
+            "isin": "INE758T01015",
+            "name": "ETERNAL LIMITED # EQUITY SHARES",
+            "units": 8,
+            "value": 1910,
+            "additional_info": {
+              "market_price": 238.75,
+              "free_balance": 8
+            }
+          },
+          {
+            "isin": "INE040H01021",
+            "name": "SUZLON ENERGY LIMITED - NEW EQUITY SHARES OF RS. 2/- AFTER SPLIT",
+            "units": 20,
+            "value": 1429.2,
+            "additional_info": {
+              "market_price": 71.46,
+              "free_balance": 20
+            }
+          }
+        ],
+        "demat_mutual_funds": [
+          {
+            "isin": "INF666M01IW1",
+            "name": "GROWW AM LTD#GROWW MF- GROWW GOLD ETF",
+            "units": 7,
+            "value": 658.49,
+            "additional_info": {
+              "market_price": 94.07,
+              "free_balance": 7
+            }
+          },
+          {
+            "isin": "INF666M01IH2",
+            "name": "GROWW AM LTD#GROWW MF- GROWW NIFTY EV & NEW AGE AUTOMOTIVE ETF",
+            "units": 5,
+            "value": 145.15,
+            "additional_info": {
+              "market_price": 29.03,
+              "free_balance": 5
+            }
+          }
+        ],
+        "corporate_bonds": [],
+        "government_securities": [],
+        "aifs": []
+      },
+      "additional_info": {
+        "status": "Active",
+        "bo_type": null,
+        "bo_sub_status": "Individual- Resident Negative Nomination",
+        "bsda": "NO",
+        "nominee": "Not Registered",
+        "email": "surendraapril98@gmail.com"
+      },
+      "value": 7994.39
+    },
+    {
+      "dp_id": "12010900",
+      "dp_name": "MOTILAL OSWAL FINANCIAL SERVICES LIMITED DP ID : 12010900 CLIENT ID : 19432435 Email Id : SURENDRAAPRIL98@GMAIL. COM Mobile No : XXXXXX8801 BO Sub Status : Individual- Resident Negative Nomination BSDA : NO RGESS : NO Account Status : Active BO Status : INDIVIDUAL Frozen Status : Not Frozen Nominee : Not Registered",
+      "bo_id": "1209550018781451",
+      "client_id": "19432435",
+      "demat_type": "cdsl",
+      "holdings": {
+        "equities": [
+          {
+            "isin": "INE805Q01028",
+            "name": "ADCON CAPITAL SERVICES LTD#NEW EQUITY SHARES WITH FACE VALUE Re. 1/- AFTER SUBDIVISION",
+            "units": 150,
+            "value": 111,
+            "additional_info": {
+              "market_price": 0.74,
+              "free_balance": 150
+            }
+          },
+          {
+            "isin": "INE092T01019",
+            "name": "IDFC FIRST BANK LIMITED # EQUITY SHARES",
+            "units": 10,
+            "value": 680.3,
+            "additional_info": {
+              "market_price": 68.03,
+              "free_balance": 10
+            }
+          },
+          {
+            "isin": "INE053F01010",
+            "name": "INDIAN RAILWAY FINANCE CORPORATION LIMITED # EQUITY SHARES",
+            "units": 10,
+            "value": 1389,
+            "additional_info": {
+              "market_price": 138.9,
+              "free_balance": 10
+            }
+          },
+          {
+            "isin": "INE733E01010",
+            "name": "NTPC LIMITED-EQUITY SHARES",
+            "units": 5,
+            "value": 1671.25,
+            "additional_info": {
+              "market_price": 334.25,
+              "free_balance": 5
+            }
+          },
+          {
+            "isin": "INE758T01015",
+            "name": "ETERNAL LIMITED # EQUITY SHARES",
+            "units": 8,
+            "value": 1910,
+            "additional_info": {
+              "market_price": 238.75,
+              "free_balance": 8
+            }
+          },
+          {
+            "isin": "INE040H01021",
+            "name": "SUZLON ENERGY LIMITED - NEW EQUITY SHARES OF RS. 2/- AFTER SPLIT",
+            "units": 20,
+            "value": 1429.2,
+            "additional_info": {
+              "market_price": 71.46,
+              "free_balance": 20
+            }
+          }
+        ],
+        "demat_mutual_funds": [
+          {
+            "isin": "INF666M01IW1",
+            "name": "GROWW AM LTD#GROWW MF- GROWW GOLD ETF",
+            "units": 7,
+            "value": 658.49,
+            "additional_info": {
+              "market_price": 94.07,
+              "free_balance": 7
+            }
+          },
+          {
+            "isin": "INF666M01IH2",
+            "name": "GROWW AM LTD#GROWW MF- GROWW NIFTY EV & NEW AGE AUTOMOTIVE ETF",
+            "units": 5,
+            "value": 145.15,
+            "additional_info": {
+              "market_price": 29.03,
+              "free_balance": 5
+            }
+          }
+        ],
+        "corporate_bonds": [],
+        "government_securities": [],
+        "aifs": []
+      },
+      "additional_info": {
+        "status": "Active",
+        "bo_type": null,
+        "bo_sub_status": "Individual- Resident Negative Nomination",
+        "bsda": "NO",
+        "nominee": "Not Registered",
+        "email": "surendraapril98@gmail."
+      },
+      "value": 7994.39
+    },
+    {
+      "dp_id": "",
+      "dp_name": "INDMONEY PRIVATE LIMITED DP का नाम: INDMONEY PRIVATE LIMITED STATEMENT OF TRANSACTIONS FOR THE PERIOD FROM 01-05-2025 TO 31-05-2025 01-05-2025 से 31-05-2025 तक क� अव�ध के �लए लेनदेन� का �ववरण No Transaction during the period अव�ध के दौरान कोई लेनदेन नह�ं Nil Holding �नल होि�डंग",
+      "bo_id": "1209550018781451",
+      "client_id": "",
+      "demat_type": "cdsl",
+      "holdings": {
+        "equities": [
+          {
+            "isin": "INE805Q01028",
+            "name": "ADCON CAPITAL SERVICES LTD#NEW EQUITY SHARES WITH FACE VALUE Re. 1/- AFTER SUBDIVISION",
+            "units": 150,
+            "value": 111,
+            "additional_info": {
+              "market_price": 0.74,
+              "free_balance": 150
+            }
+          },
+          {
+            "isin": "INE092T01019",
+            "name": "IDFC FIRST BANK LIMITED # EQUITY SHARES",
+            "units": 10,
+            "value": 680.3,
+            "additional_info": {
+              "market_price": 68.03,
+              "free_balance": 10
+            }
+          },
+          {
+            "isin": "INE053F01010",
+            "name": "INDIAN RAILWAY FINANCE CORPORATION LIMITED # EQUITY SHARES",
+            "units": 10,
+            "value": 1389,
+            "additional_info": {
+              "market_price": 138.9,
+              "free_balance": 10
+            }
+          },
+          {
+            "isin": "INE733E01010",
+            "name": "NTPC LIMITED-EQUITY SHARES",
+            "units": 5,
+            "value": 1671.25,
+            "additional_info": {
+              "market_price": 334.25,
+              "free_balance": 5
+            }
+          },
+          {
+            "isin": "INE758T01015",
+            "name": "ETERNAL LIMITED # EQUITY SHARES",
+            "units": 8,
+            "value": 1910,
+            "additional_info": {
+              "market_price": 238.75,
+              "free_balance": 8
+            }
+          },
+          {
+            "isin": "INE040H01021",
+            "name": "SUZLON ENERGY LIMITED - NEW EQUITY SHARES OF RS. 2/- AFTER SPLIT",
+            "units": 20,
+            "value": 1429.2,
+            "additional_info": {
+              "market_price": 71.46,
+              "free_balance": 20
+            }
+          }
+        ],
+        "demat_mutual_funds": [
+          {
+            "isin": "INF666M01IW1",
+            "name": "GROWW AM LTD#GROWW MF- GROWW GOLD ETF",
+            "units": 7,
+            "value": 658.49,
+            "additional_info": {
+              "market_price": 94.07,
+              "free_balance": 7
+            }
+          },
+          {
+            "isin": "INF666M01IH2",
+            "name": "GROWW AM LTD#GROWW MF- GROWW NIFTY EV & NEW AGE AUTOMOTIVE ETF",
+            "units": 5,
+            "value": 145.15,
+            "additional_info": {
+              "market_price": 29.03,
+              "free_balance": 5
+            }
+          }
+        ],
+        "corporate_bonds": [],
+        "government_securities": [],
+        "aifs": []
+      },
+      "additional_info": {
+        "status": "Active",
+        "bo_type": null,
+        "bo_sub_status": "",
+        "bsda": "NO",
+        "nominee": "",
+        "email": ""
+      },
+      "value": 7994.39
+    }
+  ],
+  "mutual_funds": [
+    {
+      "amc": "Motilal Oswal",
+      "folio_number": "91086822252/0",
+      "registrar": "KFIN",
+      "schemes": [
+        {
+          "isin": "INF247L01445",
+          "name": "FMGD - Motilal Oswal Midcap Fund - Direct Plan Growth",
+          "nav": "114.067",
+          "scheme_type": "equity",
+          "units": 31.29,
+          "value": 3568.7,
+          "additional_info": {
+            "arn_code": null,
+            "investment_value": 3500.09
+          }
+        }
+      ],
+      "value": 3568.7
+    }
+  ],
+  "insurance": {
+    "life_insurance_policies": []
+  },
+  "meta": {
+    "cas_type": "CDSL",
+    "generated_at": "2025-07-02T22:27:04",
+    "statement_period": {
+      "from": "2025-05-01",
+      "to": "2025-05-31"
+    }
+  },
+  "summary": {
+    "accounts": {
+      "demat": {
+        "count": 4,
+        "total_value": 31977.56
+      },
+      "mutual_funds": {
+        "count": 1,
+        "total_value": 3568.7
+      },
+      "insurance": {
+        "count": 0,
+        "total_value": 0
+      }
+    },
+    "total_value": 35546.26
+  }
+}

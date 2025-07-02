@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAS Parser - Test Your PDF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏦 CAS Parser</h1>
+            <p>Upload your Consolidated Account Statement (CAS) PDF and get structured JSON data</p>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <!-- File Upload Area -->
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <div class="upload-icon">📄</div>
+                            <h3>Drop your PDF file here</h3>
+                            <p>or <span class="browse-link">browse to select</span></p>
+                            <input type="file" id="pdfFile" name="pdf" accept=".pdf" required>
+                        </div>
+                        <div class="file-info" id="fileInfo" style="display: none;">
+                            <div class="file-details">
+                                <span class="file-name" id="fileName"></span>
+                                <span class="file-size" id="fileSize"></span>
+                            </div>
+                            <button type="button" class="remove-file" id="removeFile">✕</button>
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="input-group">
+                        <label for="password">Password (if PDF is encrypted):</label>
+                        <input type="password" id="password" name="password" placeholder="Enter PDF password">
+                        <small>Leave empty if PDF is not password protected</small>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="parse-btn" id="parseBtn">
+                        <span class="btn-text">Parse PDF</span>
+                        <div class="spinner" style="display: none;"></div>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2>📊 Parsed Results</h2>
+                    <div class="result-actions">
+                        <button class="action-btn" id="copyBtn">📋 Copy JSON</button>
+                        <button class="action-btn" id="downloadBtn">💾 Download JSON</button>
+                        <button class="action-btn secondary" id="parseAnotherBtn">🔄 Parse Another</button>
+                    </div>
+                </div>
+                
+                <!-- Success Result -->
+                <div class="result-content" id="successResult" style="display: none;">
+                    <div class="result-info">
+                        <div class="info-item">
+                            <strong>File:</strong> <span id="resultFileName"></span>
+                        </div>
+                        <div class="info-item">
+                            <strong>CAS Type:</strong> <span id="resultCasType"></span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Investor:</strong> <span id="resultInvestor"></span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Total Value:</strong> <span id="resultTotalValue"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="json-container">
+                        <pre id="jsonOutput"></pre>
+                    </div>
+                </div>
+
+                <!-- Error Result -->
+                <div class="error-result" id="errorResult" style="display: none;">
+                    <div class="error-icon">❌</div>
+                    <h3>Parsing Failed</h3>
+                    <p class="error-message" id="errorMessage"></p>
+                    <div class="error-suggestions">
+                        <h4>Possible solutions:</h4>
+                        <ul>
+                            <li>Check if the PDF password is correct</li>
+                            <li>Ensure the file is a valid CAS PDF</li>
+                            <li>Try with a different PDF file</li>
+                            <li>Contact support if the issue persists</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature Info -->
+            <section class="info-section">
+                <h2>✨ Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3>Encrypted PDFs</h3>
+                        <p>Supports password-protected CAS documents</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏦</div>
+                        <h3>CDSL Support</h3>
+                        <p>Fully compatible with CDSL CAS format</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Complete Data</h3>
+                        <p>Extracts investor info, holdings, and portfolios</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Fast Processing</h3>
+                        <p>Quick parsing with real-time results</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sample Info -->
+            <section class="sample-section">
+                <h2>🧪 Test with Sample</h2>
+                <p>Want to try it out? Use our sample CDSL CAS document:</p>
+                <div class="sample-info">
+                    <div class="sample-details">
+                        <strong>File:</strong> MAY2025_AA07602549_TXN.pdf<br>
+                        <strong>Password:</strong> APEPY1667C<br>
+                        <strong>Type:</strong> CDSL CAS (9 pages)
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>CAS Parser v1.0 - Built with Node.js and Express</p>
+        </footer>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast" id="toast" style="display: none;">
+        <span class="toast-message" id="toastMessage"></span>
+        <button class="toast-close" id="toastClose">✕</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

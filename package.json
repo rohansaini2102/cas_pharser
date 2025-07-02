@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "node test/test-parser.js"
+    "test": "node test/test-parser.js",
+    "web": "node server.js",
+    "dev": "node server.js"
   },
   "keywords": ["cas", "cdsl", "nsdl", "cams", "kfintech", "pdf", "parser"],
   "author": "",
@@ -15,7 +17,10 @@
     "pdf-lib": "^1.17.1",
     "pdf2json": "^3.0.5",
     "pdfreader": "^3.0.0",
-    "pdfjs-dist": "^4.0.379"
+    "pdfjs-dist": "^4.0.379",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "cors": "^2.8.5"
   },
   "devDependencies": {}
 }
