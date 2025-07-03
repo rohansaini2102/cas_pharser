@@ -21,10 +21,10 @@ class CDSLParser extends BaseParser {
     };
 
     try {
-      // Extract name - appears directly in the text as "Surendra satyanarayan yeleswaram"
-      const nameMatch = this.pdfText.match(/([A-Z][a-z]+\s+[a-z]+\s+[a-z]+)\s+S\s+O\s+/i) ||
-                       this.pdfText.match(/([A-Z][a-z]+\s+[a-z]+\s+[a-z]+)\s+PAN\s*:/i) ||
-                       this.pdfText.match(/([A-Z][a-z]+\s+[a-z]+\s+[a-z]+)(?:\s+S\s+O|\s+D\s+O|\s+W\s+O)/i);
+      // Extract name - appears before S O / D O / W O pattern or before PAN
+      const nameMatch = this.pdfText.match(/([A-Z][a-z]+(?:\s+[a-z]+)*)\s+(?:S\s+O|D\s+O|W\s+O)\s+/i) ||
+                       this.pdfText.match(/([A-Z][a-z]+(?:\s+[a-z]+)*)\s+PAN\s*:/i) ||
+                       this.pdfText.match(/Your\s+Demat\s+Account[^]*?single\s+name\s+of\s+([A-Z\s]+)\s+\(/i);
       if (nameMatch) {
         investor.name = this.cleanText(nameMatch[1]);
       }
@@ -36,8 +36,8 @@ class CDSLParser extends BaseParser {
         investor.pan = panMatch[1];
       }
 
-      // Extract address - appears after "S O SATYANARAYAN YELESWARAM"
-      const addressMatch = this.pdfText.match(/S\s+O\s+SATYANARAYAN\s+YELESWARAM\s+([A-Z][^]*?)(?:PINCODE|Statement|YOUR)/i);
+      // Extract address - appears after "S O [PARENT_NAME]" pattern
+      const addressMatch = this.pdfText.match(/S\s+O\s+[A-Z\s]+\s+([A-Z][^]*?)(?:PINCODE|Statement|YOUR)/i);
       if (addressMatch) {
         let address = this.cleanText(addressMatch[1]);
         // Clean up address formatting
@@ -568,64 +568,85 @@ class CDSLParser extends BaseParser {
   }
 
   /**
-   * Extract mutual funds (non-demat)
+   * Extract mutual funds (non-demat) - Generic implementation
    */
   async extractMutualFunds() {
     const mutualFunds = [];
     
     try {
-      // Look for mutual fund sections - the real format
-      const mfPattern = /FMGD - Motilal Oswal Midcap Fund[^]*?(?=Grand Total|Notes|$)/gi;
-      const mfSections = this.pdfText.match(mfPattern);
+      // Look for mutual fund companies in the document
+      const amcPattern = /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*(?:\s+Mutual\s+Fund)?)/g;
+      const amcSections = [];
       
-      if (mfSections) {
-        for (const section of mfSections) {
+      // Find MF sections by looking for common patterns
+      const mfStartPattern = /MUTUAL\s+FUND\s+UNITS\s+HELD/i;
+      const mfStartIndex = this.pdfText.search(mfStartPattern);
+      
+      if (mfStartIndex !== -1) {
+        const mfSection = this.pdfText.substring(mfStartIndex);
+        
+        // Extract AMC name
+        const amcMatch = mfSection.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+Mutual\s+Fund/i);
+        if (amcMatch) {
           const mutualFund = {
-            amc: 'Motilal Oswal',
+            amc: amcMatch[1],
             folio_number: '',
-            registrar: 'KFIN',
+            registrar: '',
             schemes: [],
             value: 0
           };
           
           // Extract folio number
-          const folioMatch = section.match(/(\d+\/\d+)/);
+          const folioMatch = mfSection.match(/Folio\s+No[\s:]*([\d\/]+)/i);
           if (folioMatch) {
             mutualFund.folio_number = folioMatch[1];
           }
           
-          // Extract scheme details from the table
-          const schemePattern = /FMGD - Motilal Oswal Midcap Fund - Direct Plan Growth\s+([A-Z0-9]+)\s+([\d\/]+)\s+([\d.]+)\s+([\d.]+)\s+([\d,]+\.?\d*)\s+([\d,]+\.?\d*)/i;
-          const schemeMatch = section.match(schemePattern);
+          // Extract registrar (RTA)
+          const rtaMatch = mfSection.match(/RTA[\s:]*([A-Z]+)/i);
+          if (rtaMatch) {
+            mutualFund.registrar = rtaMatch[1];
+          }
           
-          if (schemeMatch) {
+          // Extract scheme details from the structured table
+          const tablePattern = /Scheme\s+Name[^]*?ISIN[^]*?Folio\s+No[^]*?Closing\s+Bal[^]*?NAV[^]*?Cumulative[^]*?Valuation[^]*?([A-Z][A-Za-z\s-]+(?:Fund|Growth|Plan)[^]*?)\s+([A-Z0-9]+)\s+([^\s]+)\s+([\d.]+)\s+([\d.]+)\s+([\d,]+\.?\d*)\s+([\d,]+\.?\d*)/i;
+          const tableMatch = mfSection.match(tablePattern);
+          
+          if (tableMatch) {
+            const schemeName = this.cleanText(tableMatch[1]);
+            const isin = tableMatch[2];
+            const folio = tableMatch[3];
+            const units = this.parseNumber(tableMatch[4]);
+            const nav = tableMatch[5];
+            const investmentValue = this.parseNumber(tableMatch[6]);
+            const currentValue = this.parseNumber(tableMatch[7]);
+            
+            // Update folio if not already extracted
+            if (!mutualFund.folio_number && folio) {
+              mutualFund.folio_number = folio;
+            }
+            
             const scheme = {
-              isin: 'INF247L01445', // From the debug text
-              name: 'FMGD - Motilal Oswal Midcap Fund - Direct Plan Growth',
-              units: this.parseNumber(schemeMatch[3]),
-              nav: schemeMatch[4],
-              value: this.parseNumber(schemeMatch[6]),
-              scheme_type: 'equity',
+              isin: isin,
+              name: schemeName,
+              units: units,
+              nav: nav,
+              value: currentValue,
+              scheme_type: this.determineSchemeType(schemeName),
               additional_info: {
                 arn_code: null,
-                investment_value: this.parseNumber(schemeMatch[5])
+                investment_value: investmentValue
               }
             };
             
             mutualFund.schemes.push(scheme);
-            mutualFund.value = scheme.value;
+            mutualFund.value = currentValue;
           }
           
           if (mutualFund.schemes.length > 0) {
             mutualFunds.push(mutualFund);
           }
         }
-      }
-      
-      // Also extract from the structured data we saw in debug
-      const structuredMF = this.extractMutualFundFromStructuredData();
-      if (structuredMF) {
-        mutualFunds.push(structuredMF);
       }
       
     } catch (error) {
@@ -636,55 +657,19 @@ class CDSLParser extends BaseParser {
   }
 
   /**
-   * Extract mutual fund from structured data section
+   * Determine scheme type from scheme name
    */
-  extractMutualFundFromStructuredData() {
-    try {
-      // Look for the structured MF data
-      const mfDataPattern = /Motilal Oswal Mutual Fund[^]*?ISIN\s*:\s*([A-Z0-9]+)[^]*?Folio No\s*:\s*([^\s]+)/i;
-      const match = this.pdfText.match(mfDataPattern);
-      
-      if (match) {
-        const mutualFund = {
-          amc: 'Motilal Oswal',
-          folio_number: match[2],
-          registrar: 'KFIN',
-          schemes: [],
-          value: 0
-        };
-        
-        // Look for the transaction and balance data
-        const balancePattern = /Closing Balance\s+([\d.]+)/i;
-        const balanceMatch = this.pdfText.match(balancePattern);
-        
-        const valuationPattern = /Valuation \(\s*₹\s*\)\s+([\d,]+\.?\d*)/i;
-        const valuationMatch = this.pdfText.match(valuationPattern);
-        
-        if (balanceMatch && valuationMatch) {
-          const scheme = {
-            isin: match[1],
-            name: 'FMGD - Motilal Oswal Midcap Fund - Direct Plan Growth',
-            units: this.parseNumber(balanceMatch[1]),
-            nav: '114.067', // From debug data
-            value: this.parseNumber(valuationMatch[1]),
-            scheme_type: 'equity',
-            additional_info: {
-              arn_code: null,
-              investment_value: 3500.09 // From debug data
-            }
-          };
-          
-          mutualFund.schemes.push(scheme);
-          mutualFund.value = scheme.value;
-        }
-        
-        return mutualFund;
-      }
-    } catch (error) {
-      console.error('Error extracting structured mutual fund:', error);
-    }
+  determineSchemeType(schemeName) {
+    if (!schemeName) return 'equity';
     
-    return null;
+    const name = schemeName.toLowerCase();
+    if (name.includes('debt') || name.includes('bond') || name.includes('liquid') || name.includes('money')) {
+      return 'debt';
+    } else if (name.includes('hybrid') || name.includes('balanced')) {
+      return 'hybrid';
+    } else {
+      return 'equity'; // Default
+    }
   }
 
   /**
