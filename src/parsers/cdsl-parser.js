@@ -29,7 +29,7 @@ class CDSLParser extends BaseParser {
         investor.name = this.cleanText(nameMatch[1]);
       }
 
-      // Extract PAN - appears as "PAN: APEPY1667C"
+      // Extract PAN - appears as "PAN: XXXXX9999X"
       const panMatch = this.pdfText.match(/PAN\s*:?\s*([A-Z]{5}[0-9]{4}[A-Z])/i) ||
                       this.pdfText.match(/([A-Z]{5}[0-9]{4}[A-Z])/);
       if (panMatch) {
@@ -51,7 +51,7 @@ class CDSLParser extends BaseParser {
         investor.address = address;
       }
 
-      // Extract email - appears as "Email Id : surendraapril98@gmail.com"
+      // Extract email - appears as "Email Id : user@example.com"
       const emailMatch = this.pdfText.match(/Email\s+Id\s*:?\s*([^\s]+@[^\s]+)/i) ||
                         this.pdfText.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
       if (emailMatch) {
@@ -743,19 +743,29 @@ class CDSLParser extends BaseParser {
    */
   extractDpNameForSearch(dpName) {
     try {
-      // Extract the main company name from the full DP name string
-      if (dpName.includes('INDMONEY')) {
-        return 'INDMONEY';
-      } else if (dpName.includes('GROWW')) {
-        return 'GROWW';
-      } else if (dpName.includes('MOTILAL')) {
-        return 'MOTILAL';
+      // Generic approach: extract the first meaningful company name from any broker
+      if (!dpName || typeof dpName !== 'string') {
+        return null;
       }
       
-      // Fallback: extract first meaningful word
-      const words = dpName.split(' ');
+      const words = dpName.trim().split(/\s+/);
+      
+      // Skip common words and find the main company identifier
+      const skipWords = ['DP', 'ID', 'CLIENT', 'LIMITED', 'PRIVATE', 'LTD', 'SERVICES', 'FINANCIAL', 'TECH', 'INVEST'];
+      
       for (const word of words) {
-        if (word.length > 3 && !['DP', 'ID', 'CLIENT', 'LIMITED', 'PRIVATE'].includes(word)) {
+        // Look for words that are likely company names (length > 3, not common words)
+        if (word.length > 3 && 
+            !skipWords.includes(word.toUpperCase()) && 
+            !/^\d+$/.test(word) && // Not just numbers
+            word.match(/^[A-Z][A-Z]+$/)) { // All caps words (company names)
+          return word;
+        }
+      }
+      
+      // Fallback: return first non-generic word
+      for (const word of words) {
+        if (word.length > 4 && !skipWords.includes(word.toUpperCase())) {
           return word;
         }
       }

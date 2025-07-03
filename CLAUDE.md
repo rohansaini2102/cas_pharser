@@ -96,3 +96,4 @@ The system outputs JSON with the following structure:
 - Facing problem in handling complex PDF structures with multiple embedded elements and parsing inconsistent text layouts across different CAS documents
 - Solving by developing a flexible, regex-based extraction method with fallback mechanisms and adaptive parsing algorithms
 - Updated what we do till far and what problems arise
+- Till work store in knowledge and what problems we face and how we solve them
