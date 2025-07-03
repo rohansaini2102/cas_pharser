@@ -109,7 +109,7 @@ async function main() {
   
   if (args.length < 1) {
     console.log('Usage: node src/index.js <pdf-file> [password] [output-file]');
-    console.log('Example: node src/index.js MAY2025_AA07602549_TXN.pdf APEPY1667C output.json');
+    console.log('Example: node src/index.js sample_cas.pdf PASSWORD123 output.json');
     process.exit(1);
   }
 
