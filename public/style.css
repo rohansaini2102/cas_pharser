@@ -8,8 +8,8 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #000;
+    background: #fff;
     min-height: 100vh;
 }
 
@@ -23,48 +23,51 @@ body {
 header {
     text-align: center;
     margin-bottom: 40px;
-    color: white;
+    color: #000;
 }
 
 header h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    color: #000;
+    font-weight: 300;
+    letter-spacing: -1px;
 }
 
 header p {
-    font-size: 1.2rem;
-    opacity: 0.9;
+    font-size: 1rem;
+    color: #666;
+    font-weight: 400;
 }
 
 /* Upload Section */
 .upload-section {
-    background: white;
-    border-radius: 20px;
+    background: #fff;
+    border-radius: 0;
     padding: 40px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     margin-bottom: 40px;
+    border: 1px solid #000;
 }
 
 .upload-area {
-    border: 3px dashed #ddd;
-    border-radius: 15px;
+    border: 2px dashed #000;
+    border-radius: 0;
     padding: 60px 20px;
     text-align: center;
-    background: #fafafa;
+    background: #fff;
     transition: all 0.3s ease;
     position: relative;
     cursor: pointer;
 }
 
 .upload-area.dragover {
-    border-color: #667eea;
-    background: #f0f4ff;
+    border-color: #000;
+    background: #f5f5f5;
 }
 
 .upload-area.has-file {
-    border-color: #10b981;
-    background: #f0fdf4;
+    border-color: #000;
+    background: #f5f5f5;
 }
 
 .upload-content {
@@ -72,25 +75,29 @@ header p {
 }
 
 .upload-icon {
-    font-size: 4rem;
+    font-size: 3rem;
     margin-bottom: 20px;
+    font-weight: 100;
+    color: #000;
 }
 
 .upload-area h3 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     margin-bottom: 10px;
-    color: #333;
+    color: #000;
+    font-weight: 400;
 }
 
 .upload-area p {
     color: #666;
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 .browse-link {
-    color: #667eea;
-    font-weight: 600;
+    color: #000;
+    font-weight: 500;
     cursor: pointer;
+    text-decoration: underline;
 }
 
 #pdfFile {
@@ -107,10 +114,10 @@ header p {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: white;
+    background: #f5f5f5;
     padding: 20px;
-    border-radius: 10px;
-    border: 2px solid #10b981;
+    border-radius: 0;
+    border: 1px solid #000;
 }
 
 .file-details {
@@ -119,29 +126,29 @@ header p {
 }
 
 .file-name {
-    font-weight: 600;
-    color: #333;
+    font-weight: 500;
+    color: #000;
 }
 
 .file-size {
     color: #666;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
 }
 
 .remove-file {
-    background: #ef4444;
-    color: white;
+    background: #000;
+    color: #fff;
     border: none;
-    border-radius: 50%;
+    border-radius: 0;
     width: 30px;
     height: 30px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background 0.2s;
+    transition: all 0.2s;
 }
 
 .remove-file:hover {
-    background: #dc2626;
+    background: #333;
 }
 
 /* Input Group */
@@ -152,27 +159,30 @@ header p {
 .input-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 600;
-    color: #333;
+    font-weight: 500;
+    color: #000;
 }
 
 .input-group input {
     width: 100%;
-    padding: 15px;
-    border: 2px solid #e5e7eb;
-    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #000;
+    border-radius: 0;
     font-size: 1rem;
     transition: border-color 0.2s;
+    background: #fff;
+    color: #000;
 }
 
 .input-group input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #000;
+    border-width: 2px;
 }
 
 .input-group small {
     color: #666;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     margin-top: 5px;
     display: block;
 }
@@ -180,24 +190,26 @@ header p {
 /* Buttons */
 .parse-btn {
     width: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 18px;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 600;
+    background: #000;
+    color: #fff;
+    border: 1px solid #000;
+    padding: 16px;
+    border-radius: 0;
+    font-size: 1rem;
+    font-weight: 400;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .parse-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    background: #fff;
+    color: #000;
 }
 
 .parse-btn:disabled {
@@ -221,11 +233,11 @@ header p {
 
 /* Results Section */
 .results-section {
-    background: white;
-    border-radius: 20px;
+    background: #fff;
+    border-radius: 0;
     padding: 40px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     margin-bottom: 40px;
+    border: 1px solid #000;
 }
 
 .results-header {
@@ -238,7 +250,8 @@ header p {
 }
 
 .results-header h2 {
-    color: #333;
+    color: #000;
+    font-weight: 400;
 }
 
 .result-actions {
@@ -249,27 +262,32 @@ header p {
 
 .action-btn {
     padding: 10px 20px;
-    border: 2px solid #667eea;
-    background: #667eea;
-    color: white;
-    border-radius: 8px;
+    border: 1px solid #000;
+    background: #000;
+    color: #fff;
+    border-radius: 0;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     transition: all 0.2s;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .action-btn:hover {
-    background: #5a67d8;
-    border-color: #5a67d8;
+    background: #fff;
+    color: #000;
 }
 
 .action-btn.secondary {
-    background: white;
-    color: #667eea;
+    background: #fff;
+    color: #000;
+    border-color: #000;
 }
 
 .action-btn.secondary:hover {
-    background: #f7fafc;
+    background: #000;
+    color: #fff;
 }
 
 /* Result Content */
@@ -279,8 +297,9 @@ header p {
     gap: 20px;
     margin-bottom: 30px;
     padding: 20px;
-    background: #f8fafc;
+    background: #f4f1e8;
     border-radius: 10px;
+    border: 1px solid #d4af37;
 }
 
 .info-item {
@@ -290,28 +309,29 @@ header p {
 }
 
 .info-item strong {
-    color: #374151;
+    color: #2d2d2d;
     font-size: 0.9rem;
 }
 
 .info-item span {
-    color: #667eea;
+    color: #d4af37;
     font-weight: 600;
 }
 
 .json-container {
-    background: #1a1a1a;
-    border-radius: 12px;
+    background: #000;
+    border-radius: 0;
     padding: 20px;
     overflow: auto;
     max-height: 600px;
+    border: 1px solid #000;
 }
 
 #jsonOutput {
-    color: #e5e7eb;
+    color: #fff;
     font-family: 'Monaco', 'Menlo', monospace;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-size: 0.875rem;
+    line-height: 1.6;
     white-space: pre-wrap;
     word-wrap: break-word;
 }
@@ -362,17 +382,18 @@ header p {
 
 /* Info Section */
 .info-section {
-    background: white;
+    background: #f5f5dc;
     border-radius: 20px;
     padding: 40px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     margin-bottom: 40px;
+    border: 1px solid #d4af37;
 }
 
 .info-section h2 {
     text-align: center;
     margin-bottom: 30px;
-    color: #333;
+    color: #2d2d2d;
 }
 
 .features-grid {
@@ -385,8 +406,9 @@ header p {
     text-align: center;
     padding: 30px 20px;
     border-radius: 15px;
-    background: #f8fafc;
+    background: #f4f1e8;
     transition: transform 0.2s;
+    border: 1px solid #d4af37;
 }
 
 .feature-card:hover {
@@ -399,7 +421,7 @@ header p {
 }
 
 .feature-card h3 {
-    color: #333;
+    color: #2d2d2d;
     margin-bottom: 10px;
 }
 
@@ -518,22 +540,24 @@ footer {
 }
 
 .summary-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: #000;
+    color: #fff;
     padding: 25px;
-    border-radius: 12px;
+    border-radius: 0;
     text-align: center;
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    border: 1px solid #000;
 }
 
 .summary-card.secondary {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    background: #fff;
+    color: #000;
+    border: 1px solid #000;
 }
 
 .summary-card.tertiary {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+    background: #f5f5f5;
+    color: #000;
+    border: 1px solid #000;
 }
 
 .card-title {
@@ -556,9 +580,10 @@ footer {
 
 /* Allocation Overview */
 .allocation-overview {
-    background: #f8fafc;
+    background: #f4f1e8;
     border-radius: 10px;
     padding: 20px;
+    border: 1px solid #d4af37;
 }
 
 .allocation-item {
@@ -566,7 +591,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #d4af37;
 }
 
 .allocation-item:last-child {
@@ -586,28 +611,29 @@ footer {
 }
 
 .allocation-dot.equity {
-    background: #667eea;
+    background: #d4af37;
 }
 
 .allocation-dot.mutual-fund {
-    background: #10b981;
+    background: #fbbf24;
 }
 
 .allocation-dot.bonds {
-    background: #f59e0b;
+    background: #8b7355;
 }
 
 .allocation-value {
     font-weight: 600;
-    color: #1e293b;
+    color: #2d2d2d;
 }
 
 /* Investor Card */
 .investor-card {
-    background: #f8fafc;
+    background: #f4f1e8;
     border-radius: 12px;
     padding: 25px;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid #d4af37;
+    border: 1px solid #d4af37;
 }
 
 .investor-grid {
@@ -624,12 +650,12 @@ footer {
 
 .investor-label {
     font-size: 0.9rem;
-    color: #64748b;
+    color: #4a4a4a;
     font-weight: 500;
 }
 
 .investor-value {
-    color: #1e293b;
+    color: #2d2d2d;
     font-weight: 600;
     word-break: break-word;
 }
@@ -637,14 +663,14 @@ footer {
 /* Tables */
 .account-table {
     margin-bottom: 30px;
-    border-radius: 12px;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #000;
 }
 
 .table-header {
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    color: white;
+    background: #000;
+    color: #fff;
     padding: 20px;
     display: flex;
     justify-content: space-between;
@@ -669,27 +695,29 @@ footer {
 .data-table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: #fff;
 }
 
 .data-table th {
-    background: #f1f5f9;
-    color: #374151;
+    background: #f5f5f5;
+    color: #000;
     padding: 15px 12px;
     text-align: left;
-    font-weight: 600;
-    font-size: 0.9rem;
-    border-bottom: 2px solid #e2e8f0;
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #000;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .data-table td {
     padding: 15px 12px;
-    border-bottom: 1px solid #f1f5f9;
-    color: #374151;
+    border-bottom: 1px solid #e5e5e5;
+    color: #000;
 }
 
 .data-table tr:hover {
-    background: #fafbfc;
+    background: #f9f9f9;
 }
 
 .data-table tr:last-child td {
@@ -698,26 +726,28 @@ footer {
 
 .isin-code {
     font-family: monospace;
-    background: #f1f5f9;
+    background: #f5f5f5;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 0;
     font-size: 0.85rem;
+    border: 1px solid #e5e5e5;
+    color: #000;
 }
 
 .security-name {
     font-weight: 500;
-    color: #1e293b;
+    color: #2d2d2d;
 }
 
 .numeric-value {
     text-align: right;
-    font-weight: 600;
-    color: #059669;
+    font-weight: 500;
+    color: #000;
 }
 
 .units-value {
     text-align: right;
-    color: #374151;
+    color: #2d2d2d;
 }
 
 /* Empty State */

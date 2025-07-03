@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>🏦 CAS Parser</h1>
+            <h1>CAS Parser</h1>
             <p>Upload your Consolidated Account Statement (CAS) PDF and get structured JSON data</p>
         </header>
 
@@ -20,7 +20,7 @@
                     <!-- File Upload Area -->
                     <div class="upload-area" id="uploadArea">
                         <div class="upload-content">
-                            <div class="upload-icon">📄</div>
+                            <div class="upload-icon">+</div>
                             <h3>Drop your PDF file here</h3>
                             <p>or <span class="browse-link">browse to select</span></p>
                             <input type="file" id="pdfFile" name="pdf" accept=".pdf" required>
@@ -52,11 +52,11 @@
             <!-- Results Section -->
             <section class="results-section" id="resultsSection" style="display: none;">
                 <div class="results-header">
-                    <h2>📊 Parsed Results</h2>
+                    <h2>Parsed Results</h2>
                     <div class="result-actions">
-                        <button class="action-btn" id="copyBtn">📋 Copy JSON</button>
-                        <button class="action-btn" id="downloadBtn">💾 Download JSON</button>
-                        <button class="action-btn secondary" id="parseAnotherBtn">🔄 Parse Another</button>
+                        <button class="action-btn" id="copyBtn">Copy JSON</button>
+                        <button class="action-btn" id="downloadBtn">Download</button>
+                        <button class="action-btn secondary" id="parseAnotherBtn">Parse Another</button>
                     </div>
                 </div>
                 
@@ -137,32 +137,6 @@
                 </div>
             </section>
 
-            <!-- Feature Info -->
-            <section class="info-section">
-                <h2>✨ Features</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🔐</div>
-                        <h3>Encrypted PDFs</h3>
-                        <p>Supports password-protected CAS documents</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🏦</div>
-                        <h3>CDSL Support</h3>
-                        <p>Fully compatible with CDSL CAS format</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>Complete Data</h3>
-                        <p>Extracts investor info, holdings, and portfolios</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3>Fast Processing</h3>
-                        <p>Quick parsing with real-time results</p>
-                    </div>
-                </div>
-            </section>
 
             <!-- Sample Info -->
             <section class="sample-section">
